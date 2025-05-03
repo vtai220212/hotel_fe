@@ -1,17 +1,16 @@
-// src/pages/AdminPage.js
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { AdminWrapper, MainContent } from './style';
 import AdminSidebar from '../../components/AdminSidebar/AdminSidebar';
 import AdminHeader from '../../components/AdminHeader/AdminHeader';
 import Dashboard from '../../components/Dashboard/Dashboard';
 import Users from '../../components/UserAdmin/UserAdmin';
-import Rooms from '../../components/RoomsAdmin/RoomsAdmin';
-
-
+import Rooms from '../../components/RoomManagement/RoomManagement';
+import Category from '../../components/CategoryManagement/CategoryManagement';
 
 const AdminPage = () => {
   const navigate = useNavigate();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar ẩn mặc định
 
   // Kiểm tra quyền admin khi component mount
   useEffect(() => {
@@ -21,20 +20,31 @@ const AdminPage = () => {
     }
   }, [navigate]);
 
+  // Hàm để bật/tắt sidebar
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  // Đóng sidebar khi click bên ngoài
+  const handleOutsideClick = (e) => {
+    if (isSidebarOpen && !e.target.closest('aside')) {
+      setIsSidebarOpen(false);
+    }
+  };
+
   return (
-    <AdminWrapper>
-      <AdminSidebar />
-      <div style={{ flex: 1 }}>
-        <AdminHeader />
-        <MainContent>
-          <Routes>
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="users" element={<Users />} />
-            <Route path="rooms" element={<Rooms />} />
-            <Route path="/" element={<Dashboard />} /> {/* Trang mặc định */}
-          </Routes>
-        </MainContent>
-      </div>
+    <AdminWrapper onClick={handleOutsideClick}>
+      <AdminSidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+      <MainContent>
+        <AdminHeader toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen} />
+        <Routes>
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="users" element={<Users />} />
+          <Route path="rooms" element={<Rooms />} />
+          <Route path="category" element={<Category />} />
+          <Route path="/" element={<Dashboard />} />
+        </Routes>
+      </MainContent>
     </AdminWrapper>
   );
 };

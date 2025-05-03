@@ -1,4 +1,3 @@
-// frontend/src/services/UserService.js
 import axios from 'axios';
 import config from '../config';
 
@@ -19,12 +18,16 @@ axiosInstance.interceptors.request.use(
     console.log('Request config:', config);
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => {
+    console.error('Request error:', error);
+    return Promise.reject(error);
+  }
 );
 
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
+    console.error('Response error:', error.response || error);
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
@@ -49,6 +52,7 @@ export const registerUser = async (data) => {
     const response = await axiosInstance.post('/api/users/register', data);
     return response.data;
   } catch (error) {
+    console.error('Error registering user:', error.response || error);
     throw error.response?.data || { message: 'Registration failed' };
   }
 };
@@ -58,24 +62,36 @@ export const loginUser = async (data) => {
     const response = await axiosInstance.post('/api/users/login', data);
     return response.data;
   } catch (error) {
+    console.error('Error logging in user:', error.response || error);
     throw error.response?.data || { message: 'Login failed' };
   }
 };
 
-export const addUser = async (data) => {
+export const addUser = async (formData) => {
   try {
-    const response = await axiosInstance.post('/api/users/add', data);
+    const response = await axiosInstance.post('/api/users/add', formData);
     return response.data;
   } catch (error) {
+    console.error('Error adding user:', error.response || error);
     throw error.response?.data || { message: 'Failed to add user' };
   }
 };
 
-export const updateUser = async (id, data) => {
+export const updateUser = async (id, formData) => {
   try {
-    const response = await axiosInstance.put(`/api/users/${id}`, data);
+    if (!id) {
+      throw new Error('User ID is undefined');
+    }
+
+    for (let [key, value] of formData.entries()) {
+      console.log(`FormData ${key}:`, value);
+    }
+
+    const response = await axiosInstance.put(`/api/users/${id}`, formData);
+    console.log('Update user response:', response.data);
     return response.data;
   } catch (error) {
+    console.error('Error updating user:', error.response || error);
     throw error.response?.data || { message: 'Failed to update user' };
   }
 };
@@ -85,6 +101,7 @@ export const deleteUser = async (id) => {
     const response = await axiosInstance.delete(`/api/users/${id}`);
     return response.data;
   } catch (error) {
+    console.error('Error deleting user:', error.response || error);
     throw error.response?.data || { message: 'Failed to delete user' };
   }
 };

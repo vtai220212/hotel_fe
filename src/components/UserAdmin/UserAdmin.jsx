@@ -1,9 +1,8 @@
-// frontend/src/components/UserAdmin/UserAdmin.jsx
 import React, { useState, useEffect, useMemo } from 'react';
 import { useReactTable, getCoreRowModel } from '@tanstack/react-table';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { motion } from 'framer-motion'; // Thêm Framer Motion
+import { motion } from 'framer-motion';
 import { getUsers, addUser, updateUser, deleteUser } from '../../services/UserService';
 import UserTable from './UserTable';
 import UserModal from './UserModal';
@@ -15,7 +14,27 @@ import {
   Actions,
   EditButton,
   DeleteButton,
-} from './UserAdminStyles';
+  UserInfoWrapper,
+  InfoLabel,
+  InfoValue,
+} from './styles/UserAdminStyles';
+import config from '../../config';
+
+// Hook để kiểm tra kích thước màn hình
+const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return isMobile;
+};
 
 const UserAdmin = () => {
   const [users, setUsers] = useState([]);
@@ -29,8 +48,14 @@ const UserAdmin = () => {
     username: '',
     email: '',
     password: '',
+    fullName: '',
+    phoneNumber: '',
+    address: '',
+    avatar: null,
     role: 'customer',
   });
+
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     fetchUsers();
@@ -42,7 +67,8 @@ const UserAdmin = () => {
       const data = await getUsers();
       setUsers(data);
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.message || 'Failed to fetch users');
+      setUsers([]);
     } finally {
       setLoading(false);
     }
@@ -56,12 +82,24 @@ const UserAdmin = () => {
     }
     setLoading(true);
     try {
-      const newUser = await addUser(formData);
+      const formDataToSend = new FormData();
+      formDataToSend.append('username', formData.username);
+      formDataToSend.append('email', formData.email);
+      formDataToSend.append('password', formData.password);
+      formDataToSend.append('fullName', formData.fullName);
+      formDataToSend.append('phoneNumber', formData.phoneNumber);
+      formDataToSend.append('address', formData.address);
+      formDataToSend.append('role', formData.role);
+      if (formData.avatar) {
+        formDataToSend.append('avatar', formData.avatar);
+      }
+
+      const newUser = await addUser(formDataToSend);
       setUsers([...users, newUser]);
       toast.success('User added successfully!');
       closeModal();
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.message || 'Failed to add user');
     } finally {
       setLoading(false);
     }
@@ -75,12 +113,26 @@ const UserAdmin = () => {
     }
     setLoading(true);
     try {
-      const updatedUser = await updateUser(selectedUser._id, formData);
+      const formDataToSend = new FormData();
+      formDataToSend.append('username', formData.username);
+      formDataToSend.append('email', formData.email);
+      if (formData.password) {
+        formDataToSend.append('password', formData.password);
+      }
+      formDataToSend.append('fullName', formData.fullName);
+      formDataToSend.append('phoneNumber', formData.phoneNumber);
+      formDataToSend.append('address', formData.address);
+      formDataToSend.append('role', formData.role);
+      if (formData.avatar && typeof formData.avatar !== 'string') {
+        formDataToSend.append('avatar', formData.avatar);
+      }
+
+      const updatedUser = await updateUser(selectedUser._id, formDataToSend);
       setUsers(users.map(user => (user._id === selectedUser._id ? updatedUser : user)));
       toast.success('User updated successfully!');
       closeModal();
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.message || 'Failed to update user');
     } finally {
       setLoading(false);
     }
@@ -94,7 +146,7 @@ const UserAdmin = () => {
       toast.success('User deleted successfully!');
       closeDeleteModal();
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.message || 'Failed to delete user');
     } finally {
       setLoading(false);
     }
@@ -102,7 +154,16 @@ const UserAdmin = () => {
 
   const openAddModal = () => {
     setIsEditMode(false);
-    setFormData({ username: '', email: '', password: '', role: 'customer' });
+    setFormData({
+      username: '',
+      email: '',
+      password: '',
+      fullName: '',
+      phoneNumber: '',
+      address: '',
+      avatar: null,
+      role: 'customer',
+    });
     setIsModalOpen(true);
   };
 
@@ -113,6 +174,10 @@ const UserAdmin = () => {
       username: user.username,
       email: user.email,
       password: '',
+      fullName: user.fullName || '',
+      phoneNumber: user.phoneNumber || '',
+      address: user.address || '',
+      avatar: user.avatar || null,
       role: user.role,
     });
     setIsModalOpen(true);
@@ -121,7 +186,16 @@ const UserAdmin = () => {
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedUser(null);
-    setFormData({ username: '', email: '', password: '', role: 'customer' });
+    setFormData({
+      username: '',
+      email: '',
+      password: '',
+      fullName: '',
+      phoneNumber: '',
+      address: '',
+      avatar: null,
+      role: 'customer',
+    });
   };
 
   const openDeleteModal = (user) => {
@@ -138,11 +212,103 @@ const UserAdmin = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const columns = useMemo(
-    () => [
+  const columns = useMemo(() => {
+    // Cột cho giao diện mobile
+    const mobileColumns = [
+      {
+        accessorKey: 'mobileInfo',
+        header: 'Thông tin người dùng',
+        cell: ({ row }) => (
+          <UserInfoWrapper>
+            <div className="mobile-view">
+              <div className="info-row">
+                <InfoLabel>Username</InfoLabel>
+                <InfoValue>{row.original.username}</InfoValue>
+              </div>
+              <div className="info-row">
+                <InfoLabel>Email</InfoLabel>
+                <InfoValue>{row.original.email}</InfoValue>
+              </div>
+              <div className="info-row">
+                <InfoLabel>Full Name</InfoLabel>
+                <InfoValue>{row.original.fullName || '-'}</InfoValue>
+              </div>
+              <div className="info-row">
+                <InfoLabel>Phone Number</InfoLabel>
+                <InfoValue>{row.original.phoneNumber || '-'}</InfoValue>
+              </div>
+              <div className="info-row">
+                <InfoLabel>Address</InfoLabel>
+                <InfoValue>{row.original.address || '-'}</InfoValue>
+              </div>
+              <div className="info-row">
+                <InfoLabel>Avatar</InfoLabel>
+                <InfoValue>
+                  {row.original.avatar ? (
+                    <img
+                      src={`${config.API_URL}${row.original.avatar}`}
+                      alt="Avatar"
+                      style={{ width: '30px', height: '30px', borderRadius: '50%' }}
+                      onError={(e) => {
+                        e.target.src = 'https://via.placeholder.com/30';
+                        console.error('Error loading avatar:', row.original.avatar);
+                      }}
+                    />
+                  ) : (
+                    '-'
+                  )}
+                </InfoValue>
+              </div>
+              <div className="info-row">
+                <InfoLabel>Role</InfoLabel>
+                <InfoValue>{row.original.role}</InfoValue>
+              </div>
+            </div>
+          </UserInfoWrapper>
+        ),
+      },
+      {
+        accessorKey: 'actions',
+        header: 'Actions',
+        cell: ({ row }) => (
+          <Actions>
+            <EditButton onClick={() => openEditModal(row.original)}>
+              Sửa
+            </EditButton>
+            <DeleteButton onClick={() => openDeleteModal(row.original)}>
+              Xóa
+            </DeleteButton>
+          </Actions>
+        ),
+      },
+    ];
+
+    // Cột cho giao diện desktop
+    const desktopColumns = [
       { accessorKey: '_id', header: 'ID' },
       { accessorKey: 'username', header: 'Username' },
       { accessorKey: 'email', header: 'Email' },
+      { accessorKey: 'fullName', header: 'Full Name' },
+      { accessorKey: 'phoneNumber', header: 'Phone Number' },
+      { accessorKey: 'address', header: 'Address' },
+      {
+        accessorKey: 'avatar',
+        header: 'Avatar',
+        cell: ({ row }) =>
+          row.original.avatar ? (
+            <img
+              src={`${config.API_URL}${row.original.avatar}`}
+              alt="Avatar"
+              style={{ width: '40px', height: '40px', borderRadius: '50%' }}
+              onError={(e) => {
+                e.target.src = 'https://via.placeholder.com/40';
+                console.error('Error loading avatar:', row.original.avatar);
+              }}
+            />
+          ) : (
+            '-'
+          ),
+      },
       { accessorKey: 'role', header: 'Role' },
       {
         accessorKey: 'actions',
@@ -150,17 +316,19 @@ const UserAdmin = () => {
         cell: ({ row }) => (
           <Actions>
             <EditButton onClick={() => openEditModal(row.original)}>
-              Edit
+              Sửa
             </EditButton>
             <DeleteButton onClick={() => openDeleteModal(row.original)}>
-              Delete
+              Xóa
             </DeleteButton>
           </Actions>
         ),
       },
-    ],
-    []
-  );
+    ];
+
+    // Trả về cột tương ứng dựa trên kích thước màn hình
+    return isMobile ? mobileColumns : desktopColumns;
+  }, [isMobile]);
 
   const table = useReactTable({
     data: users,
@@ -170,16 +338,10 @@ const UserAdmin = () => {
 
   return (
     <Container>
-      <Title>User Management</Title>
-      <motion.div
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        transition={{ duration: 0.2 }}
-      >
-        <AddButton onClick={openAddModal} disabled={loading}>
-          Add New User
-        </AddButton>
-      </motion.div>
+      <Title>Quản lý tài khoản</Title>
+      <AddButton onClick={openAddModal} disabled={loading}>
+        Thêm tài khoản mới
+      </AddButton>
 
       {loading ? (
         <p>Loading...</p>

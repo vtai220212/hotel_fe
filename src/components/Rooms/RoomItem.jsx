@@ -1,13 +1,20 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { RoomCard, RoomImage, RoomContent, RoomPrice, RoomDiscount, RoomDetails, RoomButton, IconBed, IconGuest } from './style';
-import { HiMiniUserGroup } from "react-icons/hi2";
 
-const RoomItem = ({ title, price, discount, beds, guests, image }) => {
+const RoomItem = ({ id, title, price, discount, beds, guests, image }) => {
+  const navigate = useNavigate();
+
+  // Hàm xử lý chuyển hướng khi click vào RoomCard hoặc RoomButton
+  const handleNavigate = () => {
+    navigate(`/rooms/${id}`);
+  };
+
   return (
-    <RoomCard>
+    <RoomCard onClick={handleNavigate} style={{ cursor: 'pointer' }}>
       <RoomImage style={{ backgroundImage: `url(${image})` }}>
         <RoomDiscount>GIẢM {discount}</RoomDiscount>
-        <RoomPrice>TỪ {price}/ĐÊM</RoomPrice> {/* Di chuyển RoomPrice lên RoomImage */}
+        <RoomPrice>{price}/ĐÊM</RoomPrice>
       </RoomImage>
       <RoomContent>
         <h3>{title}</h3>
@@ -15,7 +22,14 @@ const RoomItem = ({ title, price, discount, beds, guests, image }) => {
           <IconBed /> {beds} Giường Đôi
           <IconGuest /> {guests} Người
         </RoomDetails>
-        <RoomButton>Xem Chi Tiết </RoomButton>
+        <RoomButton
+          onClick={(e) => {
+            e.stopPropagation(); // Ngăn sự kiện click của RoomCard khi click vào nút
+            handleNavigate();
+          }}
+        >
+          Xem Chi Tiết
+        </RoomButton>
       </RoomContent>
     </RoomCard>
   );

@@ -25,3 +25,11 @@ export const Avatar = styled.img`
   height: 30px;
   border-radius: 50%;
 `;
+
+export const UserName = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: right;
+`;
+

@@ -1,4 +1,3 @@
-// src/components/Header/style.js
 import styled from 'styled-components';
 import { FaBars } from 'react-icons/fa';
 
@@ -109,7 +108,7 @@ export const AboutLink = styled.div`
 `;
 
 export const AvatarWrapper = styled.div`
-  position: relative; /* Để dropdown menu định vị tương đối với AvatarWrapper */
+  position: relative;
   cursor: pointer;
 `;
 
@@ -173,12 +172,12 @@ export const LoginButton = styled.button`
 
 export const DropdownMenu = styled.div`
   position: absolute;
-  top: 60px; /* Khoảng cách từ avatar */
+  top: 60px;
   right: 0;
-  background: #1a1a1a; /* Màu nền tối */
+  background: #1a1a1a;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  z-index: 999; /* Cao hơn header để không bị che */
+  z-index: 999;
   min-width: 180px;
   overflow: hidden;
 
