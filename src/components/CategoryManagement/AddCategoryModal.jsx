@@ -26,7 +26,7 @@ const AddCategoryModal = ({ isOpen, onClose, newCategory, setNewCategory, onSubm
         <CloseButton onClick={onClose}>×</CloseButton>
         <Form onSubmit={onSubmit}>
           <div>
-            <label style={{ color: '#ffd700', fontSize: '14px', marginBottom: '5px', display: 'block' }}>
+            <label style={{ color: '#FFFFFF', fontSize: '14px', marginBottom: '5px', display: 'block' }}>
               Tên danh mục
             </label>
             <Input

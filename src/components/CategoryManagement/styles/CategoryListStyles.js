@@ -3,9 +3,8 @@ import styled from 'styled-components';
 export const TableContainer = styled.div`
   width: 100%;
   padding: 20px;
-  background: linear-gradient(145deg, #1c2526, #2e3b3e);
-  border-radius: 15px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  border: 1px solid #333333;
   margin: 20px 0;
   font-family: 'Roboto', sans-serif;
 `;
@@ -13,11 +12,10 @@ export const TableContainer = styled.div`
 export const HeaderRow = styled.div`
   display: grid;
   grid-template-columns: 3fr 1fr; /* 2 cột: Tên danh mục và Hành động */
-  background: linear-gradient(135deg, #ffd700, #daa520);
-  color: #1c2526;
-  border-radius: 10px 10px 0 0;
+  background: #FFFFFF;
+  color: #000000;
+  border-radius: 5px 5px 0 0;
   padding: 15px 0;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   position: sticky;
   top: 0;
   z-index: 1;
@@ -37,7 +35,7 @@ export const HeaderCell = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  border-right: 1px solid #E0E0E0;
 
   &:last-child {
     border-right: none;
@@ -47,18 +45,15 @@ export const HeaderCell = styled.div`
 export const Row = styled.div`
   display: grid;
   grid-template-columns: 3fr 1fr;
-  background: #2e3b3e;
-  color: #e0e0e0;
+  color: #FFFFFF;
   margin-bottom: 15px;
-  border-radius: 10px;
+  border-radius: 5px;
   transition: all 0.3s ease;
-  border: 1px solid #ffd700;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  border: 1px solid #333333;
 
   &:hover {
-    background: #3a4b4e;
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+    background: #222222;
+    transform: translateY(-2px);
   }
 
   @media (max-width: 768px) {
@@ -66,10 +61,9 @@ export const Row = styled.div`
     flex-direction: column;
     padding: 20px;
     margin-bottom: 25px;
-    border: 2px solid #ffd700;
-    background: #2e3b3e;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-    border-radius: 15px;
+    border: 1px solid #333333;
+    background: #111111;
+    border-radius: 8px;
   }
 `;
 
@@ -77,7 +71,7 @@ export const Cell = styled.div`
   padding: 12px 15px;
   font-size: 14px;
   text-align: center;
-  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  border-right: 1px solid #333333;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -99,12 +93,28 @@ export const Cell = styled.div`
       font-size: 14px;
       font-weight: 500;
       transition: all 0.3s ease;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 
       &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
       }
+    }
+
+    button:first-child {
+      background: #FFFFFF;
+      color: #000000;
+    }
+
+    button:first-child:hover {
+      background: #E0E0E0;
+    }
+
+    button:last-child {
+      background: #FF6666;
+      color: #FFFFFF;
+    }
+
+    button:last-child:hover {
+      background: #FF3333;
     }
   }
 
@@ -114,7 +124,7 @@ export const Cell = styled.div`
     align-items: center;
     padding: 10px 0;
     border-right: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    border-bottom: 1px solid #333333;
 
     &:last-child {
       border-bottom: none;
@@ -134,7 +144,7 @@ export const CellLabel = styled.div`
   @media (max-width: 768px) {
     display: block;
     font-weight: 600;
-    color: #ffd700;
+    color: #FFFFFF;
     font-size: 14px;
     width: 40%;
     text-transform: uppercase;
@@ -147,6 +157,6 @@ export const CellContent = styled.div`
     width: 60%;
     text-align: right;
     font-size: 14px;
-    color: #e0e0e0;
+    color: #E0E0E0;
   }
 `;

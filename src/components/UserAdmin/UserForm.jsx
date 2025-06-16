@@ -13,7 +13,7 @@ import {
   ModalActions,
   SubmitButton,
   CancelButton,
-} from './styles/UserFormStyles'; // Đổi sang UserFormStyles
+} from './styles/UserFormStyles';
 
 const API_URL = config.API_URL;
 
@@ -28,6 +28,10 @@ const UserForm = ({ user, onClose }) => {
     avatar: '',
     role: 'customer',
   });
+
+  // Lấy role của người dùng hiện tại từ localStorage
+  const currentUser = JSON.parse(localStorage.getItem('user')) || {};
+  const currentUserRole = currentUser.role || 'customer';
 
   useEffect(() => {
     if (user) {
@@ -151,13 +155,16 @@ const UserForm = ({ user, onClose }) => {
               placeholder="Nhập URL avatar"
             />
           </FormGroup>
-          <FormGroup>
-            <FormLabel>Vai trò</FormLabel>
-            <Select name="role" value={formData.role} onChange={handleChange}>
-              <option value="customer">Customer</option>
-              <option value="admin">Admin</option>
-            </Select>
-          </FormGroup>
+          {currentUserRole === 'admin' && (
+            <FormGroup>
+              <FormLabel>Vai trò</FormLabel>
+              <Select name="role" value={formData.role} onChange={handleChange}>
+                <option value="customer">Customer</option>
+                <option value="staff">Staff</option>
+                <option value="admin">Admin</option>
+              </Select>
+            </FormGroup>
+          )}
 
           {/* Nút Submit và Cancel (chiếm cả 2 cột) */}
           <ModalActions>

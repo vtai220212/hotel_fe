@@ -3,116 +3,125 @@ import styled from 'styled-components';
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 20px; /* Tăng khoảng cách giữa các trường */
+  gap: 15px;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
   padding: 20px;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); 
+  box-sizing: border-box;
 
   @media (max-width: 768px) {
-    margin: 0; /* Xóa margin ngang trên mobile */
-    padding: 15px;
-    border-radius: 0; /* Xóa bo góc trên mobile để tận dụng không gian */
-    box-shadow: none; /* Xóa bóng trên mobile */
+    max-width: 100%;
+    padding: 10px;
   }
 `;
 
 export const Label = styled.label`
-  font-size: 16px; /* Tăng kích thước chữ */
+  font-size: 14px;
   font-weight: 500;
-  color: #333; /* Màu đậm hơn để dễ đọc */
-  margin-bottom: 5px;
-
-  @media (max-width: 768px) {
-    font-size: 14px;
-  }
+  color: #333;
+  text-align: left;
 `;
 
 export const Input = styled.input`
-  padding: 12px; 
-  border: 1px solid #d0d0d0;
-  border-radius: 8px;
-  font-size: 16px; /* Tăng kích thước chữ */
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
   width: 100%;
   box-sizing: border-box;
-  transition: border-color 0.3s ease;
+  background-color: #fff;
+  opacity: 1;
 
   &:focus {
     outline: none;
-    border-color: #FFD700;
-    box-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
   }
 
   @media (max-width: 768px) {
-    padding: 10px;
-    font-size: 14px;
+    font-size: 12px;
+    padding: 8px;
   }
 `;
 
 export const Select = styled.select`
-  padding: 12px; /* Tăng padding */
-  border: 1px solid #d0d0d0;
-  border-radius: 8px;
-  font-size: 16px; /* Tăng kích thước chữ */
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
   width: 100%;
   box-sizing: border-box;
-  transition: border-color 0.3s ease;
+  background-color: #fff;
+  opacity: 1;
 
   &:focus {
     outline: none;
-    border-color: #FFD700;
-    box-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
   }
 
   @media (max-width: 768px) {
-    padding: 10px;
-    font-size: 14px;
+    font-size: 12px;
+    padding: 8px;
   }
 `;
 
 export const FileInput = styled.input`
-  padding: 12px 0; /* Tăng padding dọc */
-  font-size: 16px;
+  padding: 10px 0;
+  font-size: 14px;
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #fff;
+  opacity: 1;
 
-  @media (max-width: 768px) {
-    font-size: 14px;
-  }
-`;
-
-export const Button = styled.button.withConfig({
-  shouldForwardProp: (prop) => !['secondary'].includes(prop),
-})`
-  padding: 12px; /* Tăng padding cho nút dễ bấm */
-  background: ${props => (props.secondary ? '#6c757d' : '#FFD700')};
-  color: ${props => (props.secondary ? '#fff' : '#1a1a1a')};
-  border: none;
-  border-radius: 8px;
-  font-size: 16px; /* Tăng kích thước chữ */
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
-
-  &:hover {
-    background: ${props => (props.secondary ? '#5a6268' : '#DAA520')};
-    transform: translateY(-2px);
-  }
-
-  &:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-    transform: none;
+  &:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
   }
 
   @media (max-width: 768px) {
-    padding: 10px;
-    font-size: 14px;
+    font-size: 12px;
+    padding: 8px 0;
   }
 `;
 
 export const ImagePreview = styled.img`
   width: 100%;
-  max-width: 250px; /* Tăng kích thước ảnh preview */
+  max-width: 250px;
   margin-top: 10px;
-  border-radius: 8px;
+  border-radius: 4px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+`;
+
+export const Button = styled.button.withConfig({
+  shouldForwardProp: (prop) => prop !== 'secondary',
+})`
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  background: ${props => (props.secondary ? '#6c757d' : '#007bff')};
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  box-sizing: border-box;
+
+  &:hover {
+    background: ${props => (props.secondary ? '#5a6268' : '#0056b3')};
+  }
+
+  &:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 12px;
+    padding: 8px;
+  }
 `;

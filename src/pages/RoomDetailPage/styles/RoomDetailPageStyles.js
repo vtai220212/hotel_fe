@@ -1,31 +1,49 @@
 import styled from 'styled-components';
 
-const RoomDetailWrapper = styled.div`
+export const RoomDetailWrapper = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  background-color: #f5f5f5;
+
+  @media (max-width: 1024px) {
+    max-width: 900px;
+    padding: 15px;
+  }
+
+  @media (max-width: 768px) {
+    max-width: 600px;
+    padding: 10px;
+  }
+
+  @media (max-width: 576px) {
+    padding: 5px;
+  }
 `;
 
-const MainContent = styled.div`
+export const MainContent = styled.div`
   display: flex;
-  gap: 30px;
-  margin-top: 20px;
+  gap: 20px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
-const LeftColumn = styled.div`
+export const LeftColumn = styled.div`
   flex: 2;
 `;
 
-const RightColumn = styled.div`
-  width: 300px;
+export const RightColumn = styled.div`
+  flex: 1;
 `;
 
-const RoomDescription = styled.div`
-  margin-top: 20px;
+export const RoomDescription = styled.p`
   font-size: 16px;
-  color: #555;
   line-height: 1.6;
-`;
+  color: #666;
+  margin-bottom: 20px;
 
-export { RoomDetailWrapper, MainContent, LeftColumn, RightColumn, RoomDescription };
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
+`;

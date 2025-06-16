@@ -123,6 +123,26 @@ const AddRoomForm = ({
         required
       />
 
+      <Label>Diện tích phòng (m²)</Label>
+      <Input
+        type="number"
+        name="area"
+        placeholder="Nhập diện tích phòng (m²)"
+        value={newRoom.area}
+        onChange={handleInputChange}
+        required
+      />
+
+      <Label>Quang cảnh phòng</Label>
+      <Input
+        type="text"
+        name="view"
+        placeholder="Nhập quang cảnh phòng (ví dụ: Hướng Thành Phố)"
+        value={newRoom.view}
+        onChange={handleInputChange}
+        required
+      />
+
       <Label>Trạng thái</Label>
       <Select name="status" value={newRoom.status} onChange={handleInputChange}>
         <option value="available">Còn trống</option>

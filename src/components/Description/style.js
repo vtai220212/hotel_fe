@@ -3,6 +3,7 @@ import styled from 'styled-components';
 // Description Section Wrapper
 export const DescriptionSectionWrapper = styled.section`
   padding: 40px 0;
+  height: 80vh;
   background: #ffffff;
 `;
 

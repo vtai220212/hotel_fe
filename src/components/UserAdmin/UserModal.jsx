@@ -24,6 +24,10 @@ const UserModal = ({
 }) => {
   if (!isOpen) return null;
 
+  // Lấy role của người dùng hiện tại từ localStorage
+  const currentUser = JSON.parse(localStorage.getItem('user')) || {};
+  const currentUserRole = currentUser.role || 'customer';
+
   return (
     <ModalOverlay>
       <motion.div
@@ -113,17 +117,20 @@ const UserModal = ({
               placeholder="Nhập URL avatar"
             />
           </FormGroup>
-          <FormGroup>
-            <FormLabel>Vai trò</FormLabel>
-            <Select
-              name="role"
-              value={formData.role}
-              onChange={handleInputChange}
-            >
-              <option value="customer">Customer</option>
-              <option value="admin">Admin</option>
-            </Select>
-          </FormGroup>
+          {currentUserRole === 'admin' && (
+            <FormGroup>
+              <FormLabel>Vai trò</FormLabel>
+              <Select
+                name="role"
+                value={formData.role}
+                onChange={handleInputChange}
+              >
+                <option value="customer">Customer</option>
+                <option value="staff">Staff</option>
+                <option value="admin">Admin</option>
+              </Select>
+            </FormGroup>
+          )}
 
           {/* Nút Submit và Cancel (chiếm cả 2 cột) */}
           <ModalActions>

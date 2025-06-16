@@ -1,4 +1,3 @@
-// src/pages/Auth/LoginPage.js
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { PageWrapper, MainContent, FormWrapper, Form, Title, Input, Button, SocialLogin, SocialButton, NavigateText, Divider } from './style';
@@ -6,14 +5,16 @@ import { FaGoogle, FaFacebook, FaGithub } from 'react-icons/fa';
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
 import { loginUser } from '../../services/UserService';
-import { ToastContainer, toast } from 'react-toastify'; // Import react-toastify
-import 'react-toastify/dist/ReactToastify.css'; // Import CSS của react-toastify
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useAuth } from '../../context/AuthContext';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,34 +22,40 @@ const LoginPage = () => {
 
     if (!email || !password) {
       setError('Vui lòng điền đầy đủ thông tin');
-      toast.error('Vui lòng điền đầy đủ thông tin'); // Hiển thị thông báo lỗi bằng toast
+      toast.error('Vui lòng điền đầy đủ thông tin');
       return;
     }
 
     try {
       const response = await loginUser({ email, password });
-      localStorage.setItem('token', response.token);
-      localStorage.setItem('user', JSON.stringify(response.user)); // Lưu thông tin người dùng, bao gồm role
+      const { token, user } = response;
+
+      const userId = user._id || user.id;
+
+      if (!token || !user || !userId) {
+        throw new Error('Dữ liệu đăng nhập không hợp lệ từ server');
+      }
+
+      login(token, userId, user);
+
       toast.success('Đăng nhập thành công!', {
         onClose: () => {
-          // Chuyển hướng sau khi toast đóng (sau 3 giây)
-          const user = JSON.parse(localStorage.getItem('user'));
-          if (user && user.role === 'admin') {
-            navigate('/admin'); // Chuyển hướng đến trang admin nếu là admin
+          if (user && (user.role === 'admin' || user.role === 'staff')) { // Cả admin và staff đều vào /admin
+            navigate('/admin');
           } else {
-            navigate('/'); // Chuyển hướng đến trang chính nếu không phải admin
+            navigate('/');
           }
         },
       });
     } catch (err) {
       const errorMessage = err.message || 'Đăng nhập thất bại';
       setError(errorMessage);
-      toast.error(errorMessage); // Hiển thị thông báo lỗi bằng toast
+      toast.error(errorMessage);
     }
   };
 
   const handleSocialLogin = (platform) => {
-    toast.info(`Đăng nhập bằng ${platform} chưa được triển khai!`); // Sử dụng toast cho thông báo social login
+    toast.info(`Đăng nhập bằng ${platform} chưa được triển khai!`);
   };
 
   return (
@@ -77,9 +84,7 @@ const LoginPage = () => {
               required
             />
 
-            <Button type="submit">
-              Đăng Nhập
-            </Button>
+            <Button type="submit">Đăng Nhập</Button>
 
             <Divider>hoặc đăng nhập với</Divider>
 
@@ -96,8 +101,7 @@ const LoginPage = () => {
             </SocialLogin>
 
             <NavigateText>
-              Chưa có tài khoản? {" "}
-              <Link to="/register">Đăng ký ngay</Link>
+              Chưa có tài khoản? <Link to="/register">Đăng ký ngay</Link>
             </NavigateText>
           </Form>
         </FormWrapper>
@@ -105,8 +109,8 @@ const LoginPage = () => {
       <Footer />
 
       <ToastContainer
-        position="top-right" // Vị trí của toast
-        autoClose={3000} // Thời gian tự động đóng (3 giây)
+        position="top-right"
+        autoClose={3000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
@@ -114,7 +118,7 @@ const LoginPage = () => {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="dark" // Chủ đề tối để phù hợp với giao diện
+        theme="dark"
       />
     </PageWrapper>
   );

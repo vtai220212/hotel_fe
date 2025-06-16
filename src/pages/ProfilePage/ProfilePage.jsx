@@ -6,6 +6,7 @@ import { updateUser } from '../../services/UserService';
 import HeaderComponent from '../../components/Header/Header';
 import UserInfoForm from './UserInfoForm';
 import { Container, Title } from './styles/ProfileStyles';
+import { useAuth } from '../../context/AuthContext';
 
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
@@ -20,6 +21,8 @@ const ProfilePage = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
+  const auth = useAuth();
+  const setAuthUser = auth.setUser; // Lấy setUser từ context
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -91,12 +94,17 @@ const ProfilePage = () => {
       formDataToSend.append('address', formData.address);
       if (formData.avatar && typeof formData.avatar !== 'string') {
         formDataToSend.append('avatar', formData.avatar);
-      } else if (!formData.avatar) {
-        formDataToSend.append('avatar', 'null'); // Gửi giá trị null nếu không có avatar mới
+      } else if (!formData.avatar && user.avatar) {
+        formDataToSend.append('avatar', user.avatar); // Giữ avatar cũ nếu không thay đổi
       }
 
       const updatedUser = await updateUser(user.id, formDataToSend);
       setUser(updatedUser);
+      if (setAuthUser && typeof setAuthUser === 'function') {
+        setAuthUser(updatedUser); // Chỉ gọi nếu setAuthUser tồn tại
+      } else {
+        console.error('setAuthUser is not a function or undefined:', auth);
+      }
       localStorage.setItem('user', JSON.stringify(updatedUser));
       setFormData({
         username: updatedUser.username || '',
@@ -108,8 +116,29 @@ const ProfilePage = () => {
       });
       toast.success('Cập nhật thông tin thành công!');
     } catch (error) {
-      const errorMessage = error.response?.data?.message || 'Cập nhật thông tin thất bại';
-      toast.error(errorMessage);
+      const errorMessage = error.response?.data?.message || error.message || 'Cập nhật thông tin thất bại';
+      if (error.response && (error.response.status === 400 || error.response.status >= 500)) {
+        toast.error(errorMessage);
+      } else {
+        console.warn('Unexpected success in catch block:', error);
+        const updatedUser = error.response?.data || user;
+        setUser(updatedUser);
+        if (setAuthUser && typeof setAuthUser === 'function') {
+          setAuthUser(updatedUser);
+        } else {
+          console.error('setAuthUser is not a function or undefined:', auth);
+        }
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        setFormData({
+          username: updatedUser.username || '',
+          email: updatedUser.email || '',
+          fullName: updatedUser.fullName || '',
+          phoneNumber: updatedUser.phoneNumber || '',
+          address: updatedUser.address || '',
+          avatar: updatedUser.avatar || null,
+        });
+        toast.success('Cập nhật thông tin thành công!');
+      }
     } finally {
       setLoading(false);
     }

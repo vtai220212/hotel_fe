@@ -1,6 +1,3 @@
-// frontend/src/config.js
-const config = {
+export default {
   API_URL: 'http://localhost:3001',
 };
-
-export default config;

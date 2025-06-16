@@ -1,6 +1,6 @@
 import React from 'react';
 import { useReactTable, getCoreRowModel, flexRender } from '@tanstack/react-table';
-import { TableContainer, HeaderRow, HeaderCell, Row, Cell, CellLabel, CellContent } from './styles/CategoryListStyles';
+import { TableContainer, HeaderRow, HeaderCell, Row, Cell, CellLabel, CellContent } from '../RoomManagement/styles/RoomTableStyles';
 
 const CategoryList = ({ categories, onEdit, onDelete }) => {
   const columns = [
@@ -12,35 +12,14 @@ const CategoryList = ({ categories, onEdit, onDelete }) => {
       header: 'Hành động',
       id: 'actions',
       cell: ({ row }) => (
-        <div>
-          <button
-            onClick={() => onEdit(row.original)}
-            style={{
-              background: '#ffd700',
-              color: '#1c2526',
-              border: 'none',
-              padding: '8px 15px',
-              borderRadius: '5px',
-              cursor: 'pointer',
-              marginRight: '10px',
-            }}
-          >
+        <CellContent>
+          <button onClick={() => onEdit(row.original)} style={{ marginRight: '8px' }}>
             Sửa
           </button>
-          <button
-            onClick={() => onDelete(row.original._id)}
-            style={{
-              background: '#ff4d4d',
-              color: '#fff',
-              border: 'none',
-              padding: '8px 15px',
-              borderRadius: '5px',
-              cursor: 'pointer',
-            }}
-          >
+          <button onClick={() => onDelete(row.original._id)}>
             Xóa
           </button>
-        </div>
+        </CellContent>
       ),
     },
   ];

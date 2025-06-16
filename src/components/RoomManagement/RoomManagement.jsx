@@ -3,23 +3,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import RoomTable from './RoomTable';
 import AddRoomForm from './AddRoomForm';
 import { getRooms, getAllCategories, createRoom, uploadImage } from '../../services/RoomServices';
-import { TableWrapper, FormWrapper } from './styles/RoomManagementStyles';
+import { RoomContainer, TableWrapper, FormWrapper, FormButton, ModalOverlay, ModalContent, CloseButton } from './styles/RoomManagementStyles';
 import styled from 'styled-components';
-
-const RoomContainer = styled.div`
-  display: flex;
-  flex: 1;
-  overflow: hidden;
-  padding: 10px;
-  background: #f7f8fc;
-  gap: 20px;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    padding: 10px;
-    gap: 10px;
-  }
-`;
 
 const RoomManagement = () => {
   const queryClient = useQueryClient();
@@ -32,12 +17,16 @@ const RoomManagement = () => {
     discount: '',
     beds: '',
     guests: '',
+    area: '',
+    view: '',
     category: '',
     status: 'available',
     imageFile: null,
     imagePreview: '',
     imageDescription: '',
   });
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Lấy danh sách phòng
   const { data: rooms, isLoading: roomsLoading, error: roomsError } = useQuery({
@@ -63,12 +52,15 @@ const RoomManagement = () => {
         discount: '',
         beds: '',
         guests: '',
+        area: '',
+        view: '',
         category: '',
         status: 'available',
         imageFile: null,
         imagePreview: '',
         imageDescription: '',
       });
+      setIsModalOpen(false); // Đóng modal sau khi thành công
     },
   });
 
@@ -96,6 +88,8 @@ const RoomManagement = () => {
       discount: parseFloat(newRoom.discount) || 0,
       beds: parseInt(newRoom.beds),
       guests: parseInt(newRoom.guests),
+      area: parseFloat(newRoom.area),
+      view: newRoom.view,
       images: imageUrl ? [{ url: imageUrl, description: newRoom.imageDescription || '' }] : [],
     };
 
@@ -130,6 +124,22 @@ const RoomManagement = () => {
           uploadImageMutation={uploadImageMutation}
         />
       </FormWrapper>
+      <FormButton onClick={() => setIsModalOpen(true)}>+</FormButton>
+      <ModalOverlay isOpen={isModalOpen}>
+        <ModalContent>
+          <CloseButton onClick={() => setIsModalOpen(false)}>×</CloseButton>
+          <AddRoomForm
+            newRoom={newRoom}
+            setNewRoom={setNewRoom}
+            categories={categories || []}
+            categoriesLoading={categoriesLoading}
+            categoriesError={categoriesError}
+            onSubmit={handleAddSubmit}
+            createRoomMutation={createRoomMutation}
+            uploadImageMutation={uploadImageMutation}
+          />
+        </ModalContent>
+      </ModalOverlay>
     </RoomContainer>
   );
 };

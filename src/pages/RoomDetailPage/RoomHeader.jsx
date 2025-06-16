@@ -6,7 +6,7 @@ const RoomHeader = ({ title, status }) => {
     <Header>
       <Title>{title}</Title>
       <Status status={status}>
-        {status === 'available' ? 'Còn trống' : status === 'booked' ? 'Đã đặt' : 'Đang bảo trì'}
+        {status === 'available' ? 'Còn phòng trống' : status === 'booked' ? 'Đã hết phòng' : 'Đang bảo trì'}
       </Status>
     </Header>
   );

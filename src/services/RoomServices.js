@@ -48,8 +48,8 @@ export const deleteRoom = async (roomId) => {
 };
 
 export const createRoom = async (roomData) => {
-  const { code, title, price, discount, beds, guests, category, status, images } = roomData;
-  const response = await axiosWithAuth.post(`/api/rooms`, { code, title, price, discount, beds, guests, category, status, images });
+  const { code, title, price, discount, beds, guests, area, view, category, status, images } = roomData;
+  const response = await axiosWithAuth.post(`/api/rooms`, { code, title, price, discount, beds, guests, area, view, category, status, images });
   return response.data;
 };
 

@@ -57,6 +57,10 @@ const UserAdmin = () => {
 
   const isMobile = useIsMobile();
 
+  // Lấy role của người dùng hiện tại từ localStorage
+  const currentUser = JSON.parse(localStorage.getItem('user')) || {};
+  const currentUserRole = currentUser.role || 'customer';
+
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -67,7 +71,7 @@ const UserAdmin = () => {
       const data = await getUsers();
       setUsers(data);
     } catch (error) {
-      toast.error(error.message || 'Failed to fetch users');
+      toast.error(error.message || 'Không thể lấy danh sách người dùng');
       setUsers([]);
     } finally {
       setLoading(false);
@@ -77,7 +81,7 @@ const UserAdmin = () => {
   const handleAddUser = async (e) => {
     e.preventDefault();
     if (!formData.username || !formData.email || !formData.password) {
-      toast.error('Please fill in all required fields');
+      toast.error('Vui lòng điền đầy đủ các trường bắt buộc');
       return;
     }
     setLoading(true);
@@ -96,10 +100,10 @@ const UserAdmin = () => {
 
       const newUser = await addUser(formDataToSend);
       setUsers([...users, newUser]);
-      toast.success('User added successfully!');
+      toast.success('Thêm người dùng thành công!');
       closeModal();
     } catch (error) {
-      toast.error(error.message || 'Failed to add user');
+      toast.error(error.message || 'Thêm người dùng thất bại');
     } finally {
       setLoading(false);
     }
@@ -108,7 +112,7 @@ const UserAdmin = () => {
   const handleUpdateUser = async (e) => {
     e.preventDefault();
     if (!formData.username || !formData.email) {
-      toast.error('Please fill in all required fields');
+      toast.error('Vui lòng điền đầy đủ các trường bắt buộc');
       return;
     }
     setLoading(true);
@@ -122,17 +126,20 @@ const UserAdmin = () => {
       formDataToSend.append('fullName', formData.fullName);
       formDataToSend.append('phoneNumber', formData.phoneNumber);
       formDataToSend.append('address', formData.address);
-      formDataToSend.append('role', formData.role);
+      // Chỉ gửi role nếu người dùng là admin
+      if (currentUserRole === 'admin') {
+        formDataToSend.append('role', formData.role);
+      }
       if (formData.avatar && typeof formData.avatar !== 'string') {
         formDataToSend.append('avatar', formData.avatar);
       }
 
       const updatedUser = await updateUser(selectedUser._id, formDataToSend);
       setUsers(users.map(user => (user._id === selectedUser._id ? updatedUser : user)));
-      toast.success('User updated successfully!');
+      toast.success('Cập nhật người dùng thành công!');
       closeModal();
     } catch (error) {
-      toast.error(error.message || 'Failed to update user');
+      toast.error(error.message || 'Cập nhật người dùng thất bại');
     } finally {
       setLoading(false);
     }
@@ -143,10 +150,10 @@ const UserAdmin = () => {
     try {
       await deleteUser(userToDelete._id);
       setUsers(users.filter(user => user._id !== userToDelete._id));
-      toast.success('User deleted successfully!');
+      toast.success('Xóa người dùng thành công!');
       closeDeleteModal();
     } catch (error) {
-      toast.error(error.message || 'Failed to delete user');
+      toast.error(error.message || 'Xóa người dùng thất bại');
     } finally {
       setLoading(false);
     }
@@ -251,7 +258,7 @@ const UserAdmin = () => {
                       style={{ width: '30px', height: '30px', borderRadius: '50%' }}
                       onError={(e) => {
                         e.target.src = 'https://via.placeholder.com/30';
-                        console.error('Error loading avatar:', row.original.avatar);
+                        console.error('Lỗi tải avatar:', row.original.avatar);
                       }}
                     />
                   ) : (
@@ -275,9 +282,11 @@ const UserAdmin = () => {
             <EditButton onClick={() => openEditModal(row.original)}>
               Sửa
             </EditButton>
-            <DeleteButton onClick={() => openDeleteModal(row.original)}>
-              Xóa
-            </DeleteButton>
+            {currentUserRole === 'admin' && (
+              <DeleteButton onClick={() => openDeleteModal(row.original)}>
+                Xóa
+              </DeleteButton>
+            )}
           </Actions>
         ),
       },
@@ -302,7 +311,7 @@ const UserAdmin = () => {
               style={{ width: '40px', height: '40px', borderRadius: '50%' }}
               onError={(e) => {
                 e.target.src = 'https://via.placeholder.com/40';
-                console.error('Error loading avatar:', row.original.avatar);
+                console.error('Lỗi tải avatar:', row.original.avatar);
               }}
             />
           ) : (
@@ -318,9 +327,11 @@ const UserAdmin = () => {
             <EditButton onClick={() => openEditModal(row.original)}>
               Sửa
             </EditButton>
-            <DeleteButton onClick={() => openDeleteModal(row.original)}>
-              Xóa
-            </DeleteButton>
+            {currentUserRole === 'admin' && (
+              <DeleteButton onClick={() => openDeleteModal(row.original)}>
+                Xóa
+              </DeleteButton>
+            )}
           </Actions>
         ),
       },
@@ -328,7 +339,7 @@ const UserAdmin = () => {
 
     // Trả về cột tương ứng dựa trên kích thước màn hình
     return isMobile ? mobileColumns : desktopColumns;
-  }, [isMobile]);
+  }, [isMobile, currentUserRole]);
 
   const table = useReactTable({
     data: users,
@@ -344,7 +355,7 @@ const UserAdmin = () => {
       </AddButton>
 
       {loading ? (
-        <p>Loading...</p>
+        <p>Đang tải...</p>
       ) : (
         <UserTable table={table} />
       )}

@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { FaMapMarkerAlt, FaCalendarAlt, FaSearch } from 'react-icons/fa';
-import DatePicker from 'react-datepicker';
-import { vi } from 'date-fns/locale';
-import "react-datepicker/dist/react-datepicker.css";
+import { DatePicker } from 'antd';
+import dayjs from 'dayjs';
 import {
   SearchBarWrapper,
   SearchContainer,
@@ -12,23 +11,14 @@ import {
   Divider
 } from './style';
 
+const { RangePicker } = DatePicker;
+
 const SearchBar = () => {
   const [dateRange, setDateRange] = useState([null, null]);
-  const [startDate, endDate] = dateRange;
 
-  const CustomHeader = ({
-    date,
-    decreaseMonth,
-    increaseMonth,
-    prevMonthButtonDisabled,
-    nextMonthButtonDisabled,
-  }) => (
-    <div className="react-datepicker__header">
-      <div className="react-datepicker__current-month">
-        {date.toLocaleString('vi', { month: 'long', year: 'numeric' })}
-      </div>
-    </div>
-  );
+  const handleDateChange = (dates) => {
+    setDateRange(dates);
+  };
 
   return (
     <SearchBarWrapper>
@@ -43,19 +33,15 @@ const SearchBar = () => {
         <Divider />
         <SearchGroup>
           <FaCalendarAlt className="icon" />
-          <DatePicker
-            selected={startDate}
-            onChange={(dates) => setDateRange(dates)}
-            startDate={startDate}
-            endDate={endDate}
-            selectsRange
-            isClearable
-            placeholderText="Check-in → Check-out"
-            locale={vi}
-            dateFormat="dd/MM/yyyy"
-            monthsShown={2}
-            renderCustomHeader={CustomHeader}
-            showPopperArrow={false}
+          <RangePicker
+            value={dateRange}
+            onChange={handleDateChange}
+            format="DD/MM/YYYY"
+            disabledDate={(current) => current && current < dayjs().startOf('day')}
+            placeholder={['Check-in', 'Check-out']}
+            style={{ border: 'none', padding: 0, width: '100%' }}
+            allowClear
+            showArrow={false}
             className="date-picker-input"
           />
         </SearchGroup>

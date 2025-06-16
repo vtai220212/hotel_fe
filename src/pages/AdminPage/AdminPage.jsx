@@ -7,15 +7,16 @@ import Dashboard from '../../components/Dashboard/Dashboard';
 import Users from '../../components/UserAdmin/UserAdmin';
 import Rooms from '../../components/RoomManagement/RoomManagement';
 import Category from '../../components/CategoryManagement/CategoryManagement';
+import Booking from '../../components/BookingManagement/OrderManagement';
 
 const AdminPage = () => {
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar ẩn mặc định
 
-  // Kiểm tra quyền admin khi component mount
+  // Kiểm tra quyền admin hoặc staff khi component mount
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
-    if (!user || user.role !== 'admin') {
+    if (!user || (user.role !== 'admin' && user.role !== 'staff')) {
       navigate('/login');
     }
   }, [navigate]);
@@ -42,6 +43,8 @@ const AdminPage = () => {
           <Route path="users" element={<Users />} />
           <Route path="rooms" element={<Rooms />} />
           <Route path="category" element={<Category />} />
+          <Route path="bookings" element={<Booking />} />
+
           <Route path="/" element={<Dashboard />} />
         </Routes>
       </MainContent>

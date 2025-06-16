@@ -7,7 +7,7 @@ export const ModalOverlay = styled(motion.div)`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -16,29 +16,28 @@ export const ModalOverlay = styled(motion.div)`
 `;
 
 export const ModalContent = styled(motion.div)`
-  background: #1c2526;
+  background: #fff;
   padding: 30px;
-  border-radius: 12px;
+  border-radius: 8px;
   width: 90%;
   max-width: 600px;
   max-height: 85vh;
   overflow-y: auto;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   position: relative;
-  border: 1px solid #ffffff30;
   scrollbar-width: thin;
-  scrollbar-color: #ffffff50 #1c2526;
+  scrollbar-color: #ddd #fff;
 
   &::-webkit-scrollbar {
     width: 8px;
   }
 
   &::-webkit-scrollbar-track {
-    background: #1c2526;
+    background: #fff;
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #ffffff50;
+    background: #ddd;
     border-radius: 4px;
   }
 
@@ -56,12 +55,10 @@ export const ModalContent = styled(motion.div)`
 
 export const ModalTitle = styled.h2`
   font-size: 24px;
-  color: #ffffff;
+  color: #333;
   margin-bottom: 20px;
   text-align: center;
-  font-family: 'Montserrat', sans-serif;
-  letter-spacing: 1px;
-  text-transform: uppercase;
+  font-weight: 600;
 
   @media (max-width: 768px) {
     font-size: 20px;
@@ -80,14 +77,13 @@ export const CloseButton = styled.button`
   right: 15px;
   background: none;
   border: none;
-  color: #ff4d4d;
+  color: #dc3545;
   font-size: 28px;
   cursor: pointer;
-  transition: transform 0.3s ease, color 0.3s ease;
+  transition: color 0.3s ease;
 
   &:hover {
-    color: #cc0000;
-    transform: rotate(90deg);
+    color: #c82333;
   }
 
   @media (max-width: 480px) {
@@ -113,24 +109,20 @@ export const Form = styled.form`
 
 export const Input = styled.input`
   padding: 12px 20px;
-  border-radius: 8px;
-  background: #2e3b3e;
-  color: #ffffff;
-  border: 1px solid #ffffff30;
-  font-family: 'Roboto', sans-serif;
+  border-radius: 4px;
+  background: #fff;
+  color: #333;
+  border: 1px solid #ddd;
   font-size: 15px;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  transition: border-color 0.3s ease;
   outline: none;
 
   &:focus {
-    border-color: #ffd700;
-    box-shadow: 0 0 12px rgba(255, 215, 0, 0.3);
-    background: #3a4b4e;
+    border-color: #6c757d;
   }
 
   &::placeholder {
-    color: #a0a0a0;
+    color: #666;
   }
 
   @media (max-width: 768px) {
@@ -146,14 +138,11 @@ export const Input = styled.input`
 
 export const FileInput = styled.input`
   padding: 12px 20px;
-  border-radius: 8px;
-  background: #2e3b3e;
-  color: #ffffff;
-  border: 1px solid #ffffff30;
-  font-family: 'Roboto', sans-serif;
+  border-radius: 4px;
+  background: #fff;
+  color: #333;
+  border: 1px solid #ddd;
   font-size: 15px;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   outline: none;
 
   @media (max-width: 768px) {
@@ -169,26 +158,22 @@ export const FileInput = styled.input`
 
 export const Select = styled.select`
   padding: 12px 20px;
-  border-radius: 8px;
-  background: #2e3b3e;
-  color: #ffffff;
-  border: 1px solid #ffffff30;
-  font-family: 'Roboto', sans-serif;
+  border-radius: 4px;
+  background: #fff;
+  color: #333;
+  border: 1px solid #ddd;
   font-size: 15px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  transition: border-color 0.3s ease;
   outline: none;
 
   &:focus {
-    border-color: #ffd700;
-    box-shadow: 0 0 12px rgba(255, 215, 0, 0.3);
-    background: #3a4b4e;
+    border-color: #6c757d;
   }
 
   option {
-    background: #1c2526;
-    color: #ffffff;
+    background: #fff;
+    color: #333;
   }
 
   @media (max-width: 768px) {
@@ -203,29 +188,23 @@ export const Select = styled.select`
 `;
 
 export const SubmitButton = styled.button`
-  background: linear-gradient(135deg, #ffd700 0%, #daa520 100%);
-  color: #1c2526;
+  background: #6c757d;
+  color: #fff;
   padding: 14px 30px;
   border: none;
-  border-radius: 10px;
+  border-radius: 4px;
   cursor: pointer;
   font-size: 15px;
   font-weight: 600;
-  font-family: 'Roboto', sans-serif;
-  transition: all 0.4s ease;
-  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+  transition: background 0.3s ease;
 
   &:hover {
-    background: linear-gradient(135deg, #daa520 0%, #ffd700 100%);
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.6);
+    background: #5a6268;
   }
 
   &:disabled {
-    background: #555;
+    background: #ccc;
     cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
   }
 
   @media (max-width: 768px) {
@@ -242,27 +221,27 @@ export const SubmitButton = styled.button`
 export const ImageList = styled.ul`
   list-style: none;
   padding: 0;
-  margin: 0; /* Remove default margin to rely on Form's gap */
+  margin: 0;
   max-height: 200px;
   overflow-y: auto;
-  border: 1px solid #ffffff30;
-  border-radius: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
   padding: 10px;
-  background: #2e3b3e;
+  background: #f1f3f5;
 
   scrollbar-width: thin;
-  scrollbar-color: #ffffff50 #2e3b3e;
+  scrollbar-color: #ddd #f1f3f5;
 
   &::-webkit-scrollbar {
     width: 6px;
   }
 
   &::-webkit-scrollbar-track {
-    background: #2e3b3e;
+    background: #f1f3f5;
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #ffffff50;
+    background: #ddd;
     border-radius: 3px;
   }
 
@@ -277,18 +256,12 @@ export const ImageItem = styled.li`
   gap: 15px;
   margin-bottom: 15px;
   padding: 10px;
-  background: #3a4b4e;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  transition: transform 0.3s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-  }
+  background: #fff;
+  border-radius: 4px;
+  border: 1px solid #eee;
 
   &:last-child {
-    margin-bottom: 0; /* Remove margin-bottom for the last item to prevent extra spacing */
+    margin-bottom: 0;
   }
 
   @media (max-width: 768px) {
@@ -301,15 +274,10 @@ export const ImageItem = styled.li`
 export const ImagePreview = styled.img`
   width: 60px;
   height: auto;
-  border-radius: 8px;
-  border: 1px solid #ffffff30;
+  border-radius: 4px;
+  border: 1px solid #ddd;
   padding: 2px;
-  background: #1c2526;
-  transition: transform 0.3s ease;
-
-  &:hover {
-    transform: scale(1.05);
-  }
+  background: #fff;
 
   @media (max-width: 768px) {
     width: 50px;
@@ -321,21 +289,18 @@ export const ImagePreview = styled.img`
 `;
 
 export const DeleteImageButton = styled.button`
-  background: linear-gradient(135deg, #ff4d4d 0%, #cc0000 100%);
-  color: #ffffff;
+  background: #dc3545;
+  color: #fff;
   border: none;
   padding: 8px 15px;
-  border-radius: 5px;
+  border-radius: 4px;
   cursor: pointer;
   font-size: 15px;
   font-weight: 500;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: background 0.3s ease;
 
   &:hover {
-    background: linear-gradient(135deg, #cc0000 0%, #ff4d4d 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    background: #c82333;
   }
 
   @media (max-width: 768px) {

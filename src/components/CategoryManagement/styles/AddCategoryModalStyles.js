@@ -16,29 +16,28 @@ export const ModalOverlay = styled(motion.div)`
 `;
 
 export const ModalContent = styled(motion.div)`
-  background: linear-gradient(145deg, #2e3b3e 0%, #1c2526 100%);
+  background: #000000;
   padding: 30px;
-  border-radius: 15px;
+  border-radius: 8px;
   width: 90%;
   max-width: 500px;
   max-height: 80vh;
   overflow-y: auto;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  border: 1px solid #333333;
   position: relative;
-  border: 2px solid #ffd700;
   scrollbar-width: thin;
-  scrollbar-color: #ffd700 #2e3b3e;
+  scrollbar-color: #FFFFFF #333333;
 
   &::-webkit-scrollbar {
     width: 8px;
   }
 
   &::-webkit-scrollbar-track {
-    background: #2e3b3e;
+    background: #333333;
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #ffd700;
+    background: #FFFFFF;
     border-radius: 4px;
   }
 
@@ -56,7 +55,7 @@ export const ModalContent = styled(motion.div)`
 
 export const ModalTitle = styled.h2`
   font-size: 24px;
-  color: #ffd700;
+  color: #FFFFFF;
   margin-bottom: 20px;
   text-align: center;
   font-family: 'Montserrat', sans-serif;
@@ -80,13 +79,13 @@ export const CloseButton = styled.button`
   right: 15px;
   background: none;
   border: none;
-  color: #ff4d4d;
+  color: #FF6666;
   font-size: 28px;
   cursor: pointer;
   transition: transform 0.3s ease, color 0.3s ease;
 
   &:hover {
-    color: #cc0000;
+    color: #FF3333;
     transform: rotate(90deg);
   }
 
@@ -113,24 +112,22 @@ export const Form = styled.form`
 
 export const Input = styled.input`
   padding: 12px 20px;
-  border-radius: 8px;
-  background: #3a4b4e;
-  color: #e0e0e0;
-  border: 1px solid #ffd700;
+  border-radius: 5px;
+  background: #333333;
+  color: #FFFFFF;
+  border: 1px solid #666666;
   font-family: 'Roboto', sans-serif;
   font-size: 15px;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 10px rgba(255, 215, 0, 0.2);
   outline: none;
 
   &:focus {
-    border-color: #daa520;
-    box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
-    background: #4a5b5e;
+    border-color: #FFFFFF;
+    background: #444444;
   }
 
   &::placeholder {
-    color: #a0a0a0;
+    color: #999999;
   }
 
   @media (max-width: 768px) {
@@ -145,29 +142,27 @@ export const Input = styled.input`
 `;
 
 export const SubmitButton = styled.button`
-  background: linear-gradient(135deg, #ffd700 0%, #daa520 100%);
-  color: #1c2526;
+  background: #FFFFFF;
+  color: #000000;
   padding: 14px 30px;
   border: none;
-  border-radius: 10px;
+  border-radius: 5px;
   cursor: pointer;
   font-size: 18px;
   font-weight: 600;
   font-family: 'Roboto', sans-serif;
-  transition: all 0.4s ease;
-  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+  transition: all 0.3s ease;
 
   &:hover {
-    background: linear-gradient(135deg, #daa520 0%, #ffd700 100%);
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.6);
+    background: #E0E0E0;
+    transform: translateY(-2px);
   }
 
   &:disabled {
-    background: #555;
+    background: #666666;
+    color: #999999;
     cursor: not-allowed;
     transform: none;
-    box-shadow: none;
   }
 
   @media (max-width: 768px) {

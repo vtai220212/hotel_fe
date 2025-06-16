@@ -1,14 +1,14 @@
-// frontend/src/components/ProtectedRoute/ProtectedRoute.jsx
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import jwtDecode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
+import { useAuth } from '../../context/AuthContext';
 
 const ProtectedRoute = ({ children, adminOnly = false }) => {
-  const token = localStorage.getItem('token');
-  const user = JSON.parse(localStorage.getItem('user'));
+  const { token, userId, logout } = useAuth();
 
-  if (!token || !user) {
-    return <Navigate to="/login" />;
+  if (!token || !userId) {
+    console.log('ProtectedRoute - No token or userId, redirecting to login:', { token, userId });
+    return <Navigate to="/login" replace />;
   }
 
   try {
@@ -16,20 +16,23 @@ const ProtectedRoute = ({ children, adminOnly = false }) => {
     const currentTime = Date.now() / 1000;
 
     if (decoded.exp < currentTime) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      return <Navigate to="/login" />;
+      console.log('ProtectedRoute - Token expired, logging out:', { exp: decoded.exp, currentTime });
+      logout();
+      return <Navigate to="/login" replace />;
     }
 
-    if (adminOnly && user.role !== 'admin') {
-      return <Navigate to="/" />;
+    // Kiểm tra quyền admin (nếu cần, có thể bỏ nếu không dùng user.role)
+    if (adminOnly) {
+      console.log('ProtectedRoute - Admin only route, redirecting if not admin');
+      // Lưu ý: Nếu không dùng localStorage cho user, bạn cần lấy role từ token hoặc API
+      return <Navigate to="/" replace />; // Placeholder, cần logic kiểm tra role
     }
 
     return children;
   } catch (error) {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    return <Navigate to="/login" />;
+    console.error('ProtectedRoute - Error decoding token:', error);
+    logout();
+    return <Navigate to="/login" replace />;
   }
 };
 

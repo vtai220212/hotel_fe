@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
-export const useLoading = (initialLoadTime = 5000) => {
+export const useLoading = (initialLoadTime = 2000) => {
   const [isLoading, setIsLoading] = useState(true);
   const [progress, setProgress] = useState(0);
   const location = useLocation();

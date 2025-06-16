@@ -69,7 +69,7 @@ const EditRoomModal = ({
         <CloseButton onClick={onClose}>×</CloseButton>
         <Form onSubmit={onSubmit}>
           <div>
-            <label style={{ color: '#ffffff', fontSize: '15px', marginBottom: '5px', display: 'block', fontFamily: 'Roboto, sans-serif' }}>
+            <label style={{ color: '#333', fontSize: '15px', marginBottom: '5px', display: 'block', fontWeight: 500 }}>
               Mã phòng
             </label>
             <Input
@@ -82,7 +82,7 @@ const EditRoomModal = ({
             />
           </div>
           <div>
-            <label style={{ color: '#ffffff', fontSize: '15px', marginBottom: '5px', display: 'block', fontFamily: 'Roboto, sans-serif' }}>
+            <label style={{ color: '#333', fontSize: '15px', marginBottom: '5px', display: 'block', fontWeight: 500 }}>
               Tên phòng
             </label>
             <Input
@@ -95,7 +95,7 @@ const EditRoomModal = ({
             />
           </div>
           <div>
-            <label style={{ color: '#ffffff', fontSize: '15px', marginBottom: '5px', display: 'block', fontFamily: 'Roboto, sans-serif' }}>
+            <label style={{ color: '#333', fontSize: '15px', marginBottom: '5px', display: 'block', fontWeight: 500 }}>
               Giá (VNĐ)
             </label>
             <Input
@@ -108,7 +108,7 @@ const EditRoomModal = ({
             />
           </div>
           <div>
-            <label style={{ color: '#ffffff', fontSize: '15px', marginBottom: '5px', display: 'block', fontFamily: 'Roboto, sans-serif' }}>
+            <label style={{ color: '#333', fontSize: '15px', marginBottom: '5px', display: 'block', fontWeight: 500 }}>
               Giảm giá (%)
             </label>
             <Input
@@ -119,13 +119,13 @@ const EditRoomModal = ({
               onChange={handleInputChange}
             />
             {editRoom.price && editRoom.discount > 0 && (
-              <div style={{ color: '#ffffff', fontSize: '15px', marginTop: '5px', fontFamily: 'Roboto, sans-serif' }}>
+              <div style={{ color: '#333', fontSize: '15px', marginTop: '5px' }}>
                 Giá sau khi giảm: {calculateDiscountedPrice().toLocaleString()} VNĐ
               </div>
             )}
           </div>
           <div>
-            <label style={{ color: '#ffffff', fontSize: '15px', marginBottom: '5px', display: 'block', fontFamily: 'Roboto, sans-serif' }}>
+            <label style={{ color: '#333', fontSize: '15px', marginBottom: '5px', display: 'block', fontWeight: 500 }}>
               Số giường
             </label>
             <Input
@@ -138,7 +138,7 @@ const EditRoomModal = ({
             />
           </div>
           <div>
-            <label style={{ color: '#ffffff', fontSize: '15px', marginBottom: '5px', display: 'block', fontFamily: 'Roboto, sans-serif' }}>
+            <label style={{ color: '#333', fontSize: '15px', marginBottom: '5px', display: 'block', fontWeight: 500 }}>
               Số khách
             </label>
             <Input
@@ -151,13 +151,39 @@ const EditRoomModal = ({
             />
           </div>
           <div>
-            <label style={{ color: '#ffffff', fontSize: '15px', marginBottom: '5px', display: 'block', fontFamily: 'Roboto, sans-serif' }}>
+            <label style={{ color: '#333', fontSize: '15px', marginBottom: '5px', display: 'block', fontWeight: 500 }}>
+              Diện tích phòng (m²)
+            </label>
+            <Input
+              type="number"
+              name="area"
+              placeholder="Nhập diện tích phòng (m²)"
+              value={editRoom.area}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div>
+            <label style={{ color: '#333', fontSize: '15px', marginBottom: '5px', display: 'block', fontWeight: 500 }}>
+              Quang cảnh phòng
+            </label>
+            <Input
+              type="text"
+              name="view"
+              placeholder="Nhập quang cảnh phòng (ví dụ: Hướng Thành Phố)"
+              value={editRoom.view}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div>
+            <label style={{ color: '#333', fontSize: '15px', marginBottom: '5px', display: 'block', fontWeight: 500 }}>
               Danh mục
             </label>
             {categoriesLoading ? (
-              <div style={{ color: '#ffffff', fontSize: '15px', fontFamily: 'Roboto, sans-serif' }}>Đang tải danh mục...</div>
+              <div style={{ color: '#333', fontSize: '15px' }}>Đang tải danh mục...</div>
             ) : categoriesError ? (
-              <div style={{ color: '#ff4d4d', fontSize: '15px', fontFamily: 'Roboto, sans-serif' }}>Lỗi: {categoriesError.message}</div>
+              <div style={{ color: '#dc3545', fontSize: '15px' }}>Lỗi: {categoriesError.message}</div>
             ) : (
               <Select
                 name="category"
@@ -175,7 +201,7 @@ const EditRoomModal = ({
             )}
           </div>
           <div>
-            <label style={{ color: '#ffffff', fontSize: '15px', marginBottom: '5px', display: 'block', fontFamily: 'Roboto, sans-serif' }}>
+            <label style={{ color: '#333', fontSize: '15px', marginBottom: '5px', display: 'block', fontWeight: 500 }}>
               Trạng thái
             </label>
             <Select name="status" value={editRoom.status} onChange={handleInputChange}>
@@ -185,7 +211,7 @@ const EditRoomModal = ({
             </Select>
           </div>
           <div>
-            <h3 style={{ color: '#ffffff', marginBottom: '15px', fontSize: '18px', fontWeight: 600, fontFamily: 'Roboto, sans-serif' }}>
+            <h3 style={{ color: '#333', marginBottom: '15px', fontSize: '18px', fontWeight: 600 }}>
               Danh sách ảnh
             </h3>
             {editRoom.images && editRoom.images.length > 0 ? (
@@ -193,7 +219,7 @@ const EditRoomModal = ({
                 {editRoom.images.map((image, index) => (
                   <ImageItem key={index}>
                     <ImagePreview src={`${config.API_URL}${image.url}`} alt={image.description || 'Room Image'} />
-                    <span style={{ color: '#ffffff', flex: 1, fontSize: '15px', fontFamily: 'Roboto, sans-serif' }}>
+                    <span style={{ color: '#333', flex: 1, fontSize: '15px' }}>
                       {image.description || 'Không có mô tả'}
                     </span>
                     <DeleteImageButton type="button" onClick={() => handleDeleteImage(index)}>
@@ -203,13 +229,13 @@ const EditRoomModal = ({
                 ))}
               </ImageList>
             ) : (
-              <div style={{ color: '#ffffff', fontSize: '15px', fontFamily: 'Roboto, sans-serif' }}>Chưa có ảnh</div>
+              <div style={{ color: '#333', fontSize: '15px' }}>Chưa có ảnh</div>
             )}
-            <h4 style={{ color: '#ffffff', marginTop: '20px', marginBottom: '10px', fontSize: '16px', fontWeight: 600, fontFamily: 'Roboto, sans-serif' }}>
+            <h4 style={{ color: '#333', marginTop: '20px', marginBottom: '10px', fontSize: '16px', fontWeight: 600 }}>
               Thêm ảnh mới
             </h4>
             <div>
-              <label style={{ color: '#ffffff', fontSize: '15px', marginBottom: '5px', display: 'block', fontFamily: 'Roboto, sans-serif' }}>
+              <label style={{ color: '#333', fontSize: '15px', marginBottom: '5px', display: 'block', fontWeight: 500 }}>
                 Chọn ảnh
               </label>
               <FileInput
@@ -225,7 +251,7 @@ const EditRoomModal = ({
               </div>
             )}
             <div>
-              <label style={{ color: '#ffffff', fontSize: '15px', marginBottom: '5px', display: 'block', fontFamily: 'Roboto, sans-serif' }}>
+              <label style={{ color: '#333', fontSize: '15px', marginBottom: '5px', display: 'block', fontWeight: 500 }}>
                 Mô tả ảnh
               </label>
               <Input

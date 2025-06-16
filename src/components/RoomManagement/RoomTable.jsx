@@ -24,18 +24,38 @@ const DeleteModalOverlay = styled.div`
 `;
 
 const DeleteModalContent = styled.div`
-  background: #1c2526;
+  background: #fff;
   padding: 20px;
   border-radius: 8px;
   width: 400px;
   max-width: 90%;
   text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 768px) {
+    width: 90%;
+    padding: 15px;
+  }
 `;
 
 const DeleteModalTitle = styled.h3`
-  color: #ffd700;
+  color: #dc3545;
   margin-bottom: 15px;
   font-size: 18px;
+
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
+`;
+
+const DeleteModalText = styled.p`
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 14px;
+
+  @media (max-width: 768px) {
+    font-size: 12px;
+  }
 `;
 
 const DeleteModalButtons = styled.div`
@@ -43,6 +63,11 @@ const DeleteModalButtons = styled.div`
   justify-content: center;
   gap: 10px;
   margin-top: 20px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 8px;
+  }
 `;
 
 const ConfirmButton = styled.button`
@@ -53,8 +78,15 @@ const ConfirmButton = styled.button`
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
+  transition: background 0.3s;
+
   &:hover {
     background: #c82333;
+  }
+
+  @media (max-width: 768px) {
+    padding: 6px 12px;
+    font-size: 12px;
   }
 `;
 
@@ -66,24 +98,28 @@ const CancelButton = styled.button`
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
+  transition: background 0.3s;
+
   &:hover {
     background: #5a6268;
+  }
+
+  @media (max-width: 768px) {
+    padding: 6px 12px;
+    font-size: 12px;
   }
 `;
 
 const RoomTable = ({ data, categories, categoriesLoading, categoriesError }) => {
   const queryClient = useQueryClient();
 
-  // State cho modal chỉnh sửa
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editRoom, setEditRoom] = useState(null);
   const [newImage, setNewImage] = useState({ file: null, preview: '', description: '' });
 
-  // State cho modal xác nhận xóa
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [roomToDelete, setRoomToDelete] = useState(null);
 
-  // Mutation để xóa phòng
   const deleteRoomMutation = useMutation({
     mutationFn: deleteRoom,
     onSuccess: () => {
@@ -101,7 +137,6 @@ const RoomTable = ({ data, categories, categoriesLoading, categoriesError }) => 
     },
   });
 
-  // Mutation để cập nhật phòng
   const updateRoomMutation = useMutation({
     mutationFn: updateRoom,
     onSuccess: () => {
@@ -122,12 +157,10 @@ const RoomTable = ({ data, categories, categoriesLoading, categoriesError }) => 
     },
   });
 
-  // Mutation để tải ảnh
   const uploadImageMutation = useMutation({
     mutationFn: uploadImage,
   });
 
-  // Xử lý khi nhấn nút "Sửa"
   const handleEdit = (room) => {
     setEditRoom({
       ...room,
@@ -136,13 +169,11 @@ const RoomTable = ({ data, categories, categoriesLoading, categoriesError }) => 
     setIsModalOpen(true);
   };
 
-  // Xử lý khi nhấn nút "Xóa"
   const handleDelete = (roomId) => {
     setRoomToDelete(roomId);
     setIsDeleteModalOpen(true);
   };
 
-  // Xử lý xác nhận xóa
   const confirmDelete = () => {
     if (roomToDelete) {
       deleteRoomMutation.mutate(roomToDelete);
@@ -151,13 +182,11 @@ const RoomTable = ({ data, categories, categoriesLoading, categoriesError }) => 
     setRoomToDelete(null);
   };
 
-  // Xử lý hủy xóa
   const cancelDelete = () => {
     setIsDeleteModalOpen(false);
     setRoomToDelete(null);
   };
 
-  // Xử lý submit form chỉnh sửa
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     const updatedRoom = {
@@ -166,11 +195,12 @@ const RoomTable = ({ data, categories, categoriesLoading, categoriesError }) => 
       discount: parseFloat(editRoom.discount) || 0,
       beds: parseInt(editRoom.beds),
       guests: parseInt(editRoom.guests),
+      area: parseFloat(editRoom.area),
+      view: editRoom.view,
     };
     updateRoomMutation.mutate(updatedRoom);
   };
 
-  // Xử lý thêm ảnh mới
   const handleAddNewImage = async () => {
     if (!newImage.file) {
       toast.warn('Vui lòng chọn ảnh trước khi thêm.', {
@@ -235,6 +265,21 @@ const RoomTable = ({ data, categories, categoriesLoading, categoriesError }) => 
       cell: ({ row }) => `${row.original.beds} giường`,
     },
     {
+      header: 'Số khách',
+      accessorKey: 'guests',
+      cell: ({ row }) => `${row.original.guests} khách`,
+    },
+    {
+      header: 'Diện tích',
+      accessorKey: 'area',
+      cell: ({ row }) => `${row.original.area} m²`,
+    },
+    {
+      header: 'Quang cảnh',
+      accessorKey: 'view',
+      cell: ({ row }) => row.original.view || 'N/A',
+    },
+    {
       header: 'Giá',
       accessorKey: 'price',
       cell: ({ row }) => {
@@ -252,7 +297,7 @@ const RoomTable = ({ data, categories, categoriesLoading, categoriesError }) => 
       header: 'Trạng thái',
       accessorKey: 'status',
       cell: ({ row }) => (
-        <span style={{ color: row.original.status === 'available' ? '#28a745' : '#dc3545' }}>
+        <span style={{ color: '#333' }}>
           {row.original.status === 'available' ? 'Còn trống' : row.original.status === 'booked' ? 'Đã đặt' : 'Bảo trì'}
         </span>
       ),
@@ -261,20 +306,14 @@ const RoomTable = ({ data, categories, categoriesLoading, categoriesError }) => 
       header: 'Hành động',
       id: 'actions',
       cell: ({ row }) => (
-        <div>
-          <button
-            style={{ marginRight: '10px', background: 'none', border: 'none', cursor: 'pointer' }}
-            onClick={() => handleEdit(row.original)}
-          >
-            ✏️
+        <CellContent>
+          <button onClick={() => handleEdit(row.original)} style={{ marginRight: '8px' }}>
+            Sửa
           </button>
-          <button
-            style={{ background: 'none', border: 'none', cursor: 'pointer' }}
-            onClick={() => handleDelete(row.original._id)}
-          >
-            🗑️
+          <button onClick={() => handleDelete(row.original._id)}>
+            Xóa
           </button>
-        </div>
+        </CellContent>
       ),
     },
   ];
@@ -317,7 +356,6 @@ const RoomTable = ({ data, categories, categoriesLoading, categoriesError }) => 
         ))}
       </TableContainer>
 
-      {/* Modal chỉnh sửa */}
       <EditRoomModal
         isOpen={isModalOpen}
         onClose={() => {
@@ -338,14 +376,11 @@ const RoomTable = ({ data, categories, categoriesLoading, categoriesError }) => 
         uploadImageMutation={uploadImageMutation}
       />
 
-      {/* Modal xác nhận xóa */}
       {isDeleteModalOpen && (
         <DeleteModalOverlay>
           <DeleteModalContent>
             <DeleteModalTitle>Bạn có chắc muốn xóa phòng này?</DeleteModalTitle>
-            <p style={{ color: '#e0e0e0', marginBottom: '20px' }}>
-              Hành động này không thể hoàn tác.
-            </p>
+            <DeleteModalText>Hành động này không thể hoàn tác.</DeleteModalText>
             <DeleteModalButtons>
               <ConfirmButton onClick={confirmDelete}>Xóa</ConfirmButton>
               <CancelButton onClick={cancelDelete}>Hủy</CancelButton>
@@ -354,7 +389,6 @@ const RoomTable = ({ data, categories, categoriesLoading, categoriesError }) => 
         </DeleteModalOverlay>
       )}
 
-      {/* Toastify Container */}
       <ToastContainer />
     </>
   );

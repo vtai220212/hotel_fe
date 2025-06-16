@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 // Sử dụng shouldForwardProp để ngăn prop `isOpen` được truyền xuống DOM
@@ -76,7 +76,45 @@ const SidebarLink = styled(NavLink)`
   }
 `;
 
+const LogoutButton = styled.button`
+  margin-top: auto; /* Đẩy nút xuống dưới cùng */
+  color: #e0e0e0;
+  background: none;
+  border: 1px solid #FFD700;
+  font-size: 16px;
+  padding: 12px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: #FF6666;
+    color: #FFFFFF;
+    border-color: #FF6666;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 14px;
+    padding: 10px 12px;
+  }
+`;
+
 const AdminSidebar = ({ isOpen, toggleSidebar }) => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Xóa thông tin đăng nhập khỏi localStorage
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+
+    // Chuyển hướng về trang đăng nhập
+    navigate('/login');
+
+    // Đóng sidebar nếu đang mở (trên mobile)
+    toggleSidebar();
+  };
+
   return (
     <Sidebar isOpen={isOpen}>
       <SidebarTitle>Admin Menu</SidebarTitle>
@@ -92,6 +130,12 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
       <SidebarLink to="/admin/category" onClick={toggleSidebar}>
         Category
       </SidebarLink>
+      <SidebarLink to="/admin/bookings" onClick={toggleSidebar}>
+        Bookings
+      </SidebarLink>
+      <LogoutButton onClick={handleLogout}>
+        Đăng xuất
+      </LogoutButton>
     </Sidebar>
   );
 };
